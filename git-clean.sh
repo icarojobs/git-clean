@@ -11,13 +11,13 @@ MAIN_BRANCH=""
 
 mkdir -p "$CONFIG_DIR"
 
-if [ -f "$CONFIG_FILE" ]; then
-	MAIN_BRANCH=$(cat "$CONFIG_FILE" | grep -o '"main_branch"[[:space:]]*:[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+if [ -f "$CONFIG_FILE" ] && [ -s "$CONFIG_FILE" ]; then
+	MAIN_BRANCH=$(cat "$CONFIG_FILE" | sed -n 's/.*"main_branch"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
 fi
 
 if [ -z "$MAIN_BRANCH" ]; then
 	echo "=== Configuração inicial ==="
-	echo "Qual é o nome do branch de produção do seu projeto? (ex: main, master, production)"
+	echo "Informe o nome do branch de produção:"
 	read -p "> " MAIN_BRANCH
 
 	if [ -z "$MAIN_BRANCH" ]; then
