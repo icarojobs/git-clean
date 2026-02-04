@@ -10,7 +10,7 @@ O `git-clean` é uma ferramenta que automatiza a limpeza de branches que já nã
 
 Este script é **muito cuidadoso** e só remove branches que estão **realmente** mergeados no branch principal configurado. Ele realiza dupla verificação antes de deletar qualquer branch, garantindo que você não perderá trabalho.
 
-Na **primeira execução**, o script perguntará qual é o nome do seu branch de produção (ex: `main`, `master`, `production`). Essa configuração será salva em `~/.config/git-clean/settings.json` e reutilizada nas próximas execuções.
+Na **primeira execução**, o script perguntará "Informe o nome do branch de produção:" para que você possa definir qual é o seu branch principal (ex: `main`, `master`, `production`). Essa configuração será salva em `~/.config/git-clean/settings.json` e reutilizada nas próximas execuções.
 
 ## 📦 Pré-requisitos
 
@@ -76,7 +76,7 @@ git-clean
 **Primeira execução:**
 ```
 === Configuração inicial ===
-Qual é o nome do branch de produção do seu projeto? (ex: main, master, production)
+Informe o nome do branch de produção:
 > main
 
 Configuração salva em: /home/usuario/.config/git-clean/settings.json
@@ -210,7 +210,7 @@ Você pode editar manualmente este arquivo para alterar o branch principal confi
    rm ~/.config/git-clean/settings.json
    git-clean
    ```
-   O script pedirá novamente o nome do branch principal.
+   O script pedirá novamente o nome do branch principal através do prompt "Informe o nome do branch de produção:".
 
 ## 📄 Licença
 
