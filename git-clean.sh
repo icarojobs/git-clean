@@ -4,6 +4,8 @@
 # MUITO CUIDADOSO: Só remove branches que realmente estão mergeados
 
 GITHUB_REPO="icarojobs/git-clean"
+RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/refs/heads/main/git-clean.sh"
+LOCAL_SCRIPT=$(readlink -f "$0")
 
 if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
 	echo "Git Clean - Script para limpeza de branches mergeados"
@@ -13,13 +15,34 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
 	echo "Opções:"
 	echo "  --help, -h     Exibe esta mensagem de ajuda"
 	echo "  --version, -v  Exibe a versão atual do script"
+	echo "  --upgrade      Atualiza o script para a versão mais recente"
 	echo ""
 	echo "Exemplo:"
 	echo "  git-clean              Executa a limpeza de branches mergeados"
 	echo "  git-clean --help       Exibe esta mensagem de ajuda"
 	echo "  git-clean --version    Exibe a versão atual"
+	echo "  git-clean --upgrade    Atualiza o script"
 	echo ""
 	echo "Na primeira execução, você será solicitado a informar o nome do branch de produção."
+	exit 0
+fi
+
+if [ "$1" = "--upgrade" ]; then
+	echo "Atualizando git-clean..."
+	if ! command -v curl &>/dev/null; then
+		echo "Erro: curl não está instalado. Instale curl para atualizar o script."
+		exit 1
+	fi
+
+	REMOTE_CONTENT=$(curl -s "$RAW_URL")
+	if [ -z "$REMOTE_CONTENT" ]; then
+		echo "Erro ao baixar o script. Verifique sua conexão com a internet."
+		exit 1
+	fi
+
+	echo "$REMOTE_CONTENT" >"$LOCAL_SCRIPT"
+	chmod +x "$LOCAL_SCRIPT"
+	echo "Script atualizado com sucesso!"
 	exit 0
 fi
 
@@ -30,6 +53,18 @@ if [ "$1" = "--version" ] || [ "$1" = "-v" ]; then
 		exit 1
 	fi
 	echo "git-clean $VERSION"
+
+	REMOTE_CONTENT=$(curl -s "$RAW_URL")
+	if [ -n "$REMOTE_CONTENT" ] && command -v sha256sum &>/dev/null; then
+		LOCAL_HASH=$(sha256sum "$LOCAL_SCRIPT" | cut -d' ' -f1)
+		REMOTE_HASH=$(echo "$REMOTE_CONTENT" | sha256sum | cut -d' ' -f1)
+
+		if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
+			echo ""
+			echo "O seu script git-clean está desatualizado."
+			echo "Entre com o comando git-clean --upgrade para atualizar."
+		fi
+	fi
 	exit 0
 fi
 
