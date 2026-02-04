@@ -12,7 +12,7 @@ MAIN_BRANCH=""
 mkdir -p "$CONFIG_DIR"
 
 if [ -f "$CONFIG_FILE" ]; then
-	MAIN_BRANCH=$(grep -o '"main_branch"[[:space:]]*:[[:space:]]*"[^"]*"' "$CONFIG_FILE" | sed 's/.*"\([^"]*\)".*/\1/')
+	MAIN_BRANCH=$(cat "$CONFIG_FILE" | grep -o '"main_branch"[[:space:]]*:[[:space:]]*"[^"]*"' | cut -d'"' -f4)
 fi
 
 if [ -z "$MAIN_BRANCH" ]; then
@@ -36,7 +36,11 @@ MAIN_REMOTE="origin/$MAIN_BRANCH"
 echo "=== Iniciando limpeza de branches mergeados no $MAIN_REMOTE ==="
 echo ""
 
-# Atualizar informações remotas
+echo "Fazendo checkout no $MAIN_BRANCH e atualizando..."
+git checkout "$MAIN_BRANCH"
+git pull
+
+echo ""
 echo "Atualizando informações remotas..."
 git fetch --prune
 
@@ -84,10 +88,6 @@ else
 fi
 
 echo "=== Fim da limpeza de branches ==="
-echo ""
-echo "Fazendo checkout no $MAIN_BRANCH e atualizando..."
-git checkout "$MAIN_BRANCH"
-git pull
 
 echo ""
 echo "=== Processo concluído ==="

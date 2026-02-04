@@ -82,6 +82,14 @@ Qual é o nome do branch de produção do seu projeto? (ex: main, master, produc
 Configuração salva em: /home/usuario/.config/git-clean/settings.json
 
 === Iniciando limpeza de branches mergeados no origin/main ===
+
+Fazendo checkout no main e atualizando...
+Already on 'main'
+Already up to date.
+
+Atualizando informações remotas...
+
+Verificando branches locais (excluindo main e HEAD)...
 ...
 ```
 
@@ -90,13 +98,13 @@ A configuração será salva automaticamente e você não precisará informar no
 ## 📝 O que o script faz
 
 1. **Verifica configuração** - Na primeira execução, pede o nome do branch principal e salva em `~/.config/git-clean/settings.json`
-2. **Atualiza informações remotas** (`git fetch --prune`)
-3. **Identifica branches locais** que estão mergeados no branch principal configurado
-4. **Exclui branches especiais** (branch principal, `HEAD`, e branch atual marcado com `*`)
-5. **Verifica cada branch** duas vezes antes de remover
-6. **Deleta branch local** (`git branch -d`)
-7. **Deleta branch remoto** se existir (`git push origin --delete`)
-8. **Faz checkout no branch principal** e atualiza (`git pull`)
+2. **Faz checkout no branch principal** e atualiza (`git checkout <branch> && git pull`)
+3. **Atualiza informações remotas** (`git fetch --prune`)
+4. **Identifica branches locais** que estão mergeados no branch principal configurado
+5. **Exclui branches especiais** (branch principal, `HEAD`, e branch atual marcado com `*`)
+6. **Verifica cada branch** duas vezes antes de remover
+7. **Deleta branch local** (`git branch -d`)
+8. **Deleta branch remoto** se existir (`git push origin --delete`)
 
 ## 🔍 Exemplo de Saída
 
@@ -104,6 +112,10 @@ A configuração será salva automaticamente e você não precisará informar no
 
 ```
 === Iniciando limpeza de branches mergeados no origin/main ===
+
+Fazendo checkout no main e atualizando...
+Already on 'main'
+Already up to date.
 
 Atualizando informações remotas...
 
@@ -132,8 +144,6 @@ Processando cada branch...
   Branch remoto origin/feature/api-auth não existe (ou já foi deletado)
 
 === Fim da limpeza de branches ===
-
-Fazendo checkout no main e atualizando...
 
 === Processo concluído ===
 ```
