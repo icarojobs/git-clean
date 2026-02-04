@@ -16,7 +16,8 @@ Na **primeira execução**, o script perguntará "Informe o nome do branch de pr
 
 - Sistema operacional Linux, macOS ou Unix-like
 - Git instalado e configurado
-- `curl` instalado (necessário para verificar a versão com `--version`)
+- `curl` instalado (necessário para verificar a versão e atualizar o script)
+- `sha256sum` instalado (necessário para verificar se o script está atualizado)
 - Permissões de administrador/sudo (para instalar o script globalmente)
 
 ## 🔧 Instalação
@@ -70,7 +71,8 @@ which git-clean
 
 - `git-clean` - Executa a limpeza de branches mergeados
 - `git-clean --help` ou `git-clean -h` - Exibe a mensagem de ajuda
-- `git-clean --version` ou `git-clean -v` - Exibe a versão atual do script
+- `git-clean --version` ou `git-clean -v` - Exibe a versão atual do script e verifica se há atualizações
+- `git-clean --upgrade` - Atualiza o script para a versão mais recente do GitHub
 
 ### Uso Básico
 
@@ -186,6 +188,25 @@ O script utiliza os seguintes comandos Git:
 - Certifique-se de ter as permissões necessárias para deletar branches no repositório remoto
 - O script sempre finaliza fazendo checkout no branch principal configurado e atualizando-o
 - Branches remotos que não existem mais (mas ainda aparecem localmente) são tratados corretamente
+
+## 🔄 Atualizações
+
+O script verifica automaticamente se há atualizações disponíveis quando você executa `git-clean --version`. Se o script local estiver desatualizado comparado com o GitHub, será exibida uma mensagem sugerindo a atualização.
+
+**Exemplo de saída quando há atualização:**
+```
+git-clean v0.0.1
+
+O seu script git-clean está desatualizado.
+Entre com o comando git-clean --upgrade para atualizar.
+```
+
+**Para atualizar o script:**
+```bash
+git-clean --upgrade
+```
+
+O comando `--upgrade` baixa a versão mais recente do script do GitHub e substitui a versão instalada no seu sistema.
 
 ## 📂 Arquivo de Configuração
 
