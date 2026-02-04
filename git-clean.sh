@@ -3,6 +3,36 @@
 # Script para remover branches locais e remotos que já estão mergeados no branch principal
 # MUITO CUIDADOSO: Só remove branches que realmente estão mergeados
 
+GITHUB_REPO="icarojobs/git-clean"
+
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+	echo "Git Clean - Script para limpeza de branches mergeados"
+	echo ""
+	echo "Uso: git-clean [opções]"
+	echo ""
+	echo "Opções:"
+	echo "  --help, -h     Exibe esta mensagem de ajuda"
+	echo "  --version, -v  Exibe a versão atual do script"
+	echo ""
+	echo "Exemplo:"
+	echo "  git-clean              Executa a limpeza de branches mergeados"
+	echo "  git-clean --help       Exibe esta mensagem de ajuda"
+	echo "  git-clean --version    Exibe a versão atual"
+	echo ""
+	echo "Na primeira execução, você será solicitado a informar o nome do branch de produção."
+	exit 0
+fi
+
+if [ "$1" = "--version" ] || [ "$1" = "-v" ]; then
+	VERSION=$(curl -s "https://api.github.com/repos/$GITHUB_REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+	if [ -z "$VERSION" ]; then
+		echo "Erro ao buscar a versão. Verifique sua conexão com a internet."
+		exit 1
+	fi
+	echo "git-clean $VERSION"
+	exit 0
+fi
+
 set -e
 
 CONFIG_DIR="$HOME/.config/git-clean"

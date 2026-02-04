@@ -16,6 +16,7 @@ Na **primeira execução**, o script perguntará "Informe o nome do branch de pr
 
 - Sistema operacional Linux, macOS ou Unix-like
 - Git instalado e configurado
+- `curl` instalado (necessário para verificar a versão com `--version`)
 - Permissões de administrador/sudo (para instalar o script globalmente)
 
 ## 🔧 Instalação
@@ -64,6 +65,14 @@ which git-clean
 ```
 
 ## 🚀 Como Usar
+
+### Comandos Disponíveis
+
+- `git-clean` - Executa a limpeza de branches mergeados
+- `git-clean --help` ou `git-clean -h` - Exibe a mensagem de ajuda
+- `git-clean --version` ou `git-clean -v` - Exibe a versão atual do script
+
+### Uso Básico
 
 1. Navegue até a raiz do seu projeto Git
 2. Certifique-se de estar em um diretório que contenha a pasta `.git`
