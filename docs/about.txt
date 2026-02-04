@@ -1,0 +1,73 @@
+tiojobs@pop-os:~/projects/tio-jobs/git-clean$ which git-clean
+/home/tiojobs/bin/git-clean
+
+tiojobs@pop-os:~/projects/tio-jobs/git-clean$ ls -la /home/tiojobs/bin/git-clean 
+-rwxrwxr-x 1 tiojobs tiojobs 2151 Feb  4 16:04 /home/tiojobs/bin/git-clean
+
+tiojobs@pop-os:~/projects/tio-jobs/git-clean$ cat /home/tiojobs/bin/git-clean 
+#!/bin/bash
+
+# Script para remover branches locais e remotos que já estão mergeados no origin/main
+# MUITO CUIDADOSO: Só remove branches que realmente estão mergeados
+
+set -e
+
+echo "=== Iniciando limpeza de branches mergeados no origin/main ==="
+echo ""
+
+# Atualizar informações remotas
+echo "Atualizando informações remotas..."
+git fetch --prune
+
+echo ""
+echo "Verificando branches locais (excluindo main e HEAD)..."
+echo ""
+
+# Encontrar branches locais (excluindo main e HEAD) que estão mergeados no origin/main
+MERGED_BRANCHES=$(git branch --merged origin/main | grep -v "^\*" | grep -v "main" | grep -v "HEAD" | sed 's/^[ \t]*//' || true)
+
+if [ -z "$MERGED_BRANCHES" ]; then
+    echo "Nenhum branch local encontrado que esteja mergeado no origin/main."
+else
+    echo "Branches locais mergeados no origin/main:"
+    echo "$MERGED_BRANCHES"
+    echo ""
+    echo "Processando cada branch..."
+    echo ""
+
+    for branch in $MERGED_BRANCHES; do
+        echo "=== Branch: $branch ==="
+
+        # Verificar novamente se está realmente mergeado (dupla verificação)
+        if git merge-base --is-ancestor "$branch" "origin/main" 2>/dev/null; then
+            echo "✓ Confirmado: $branch está mergeado em origin/main"
+
+            # Deletar branch local
+            if git show-ref --verify --quiet "refs/heads/$branch"; then
+                echo "  Deletando branch local: $branch"
+                git branch -d "$branch"
+            fi
+
+            # Verificar se existe branch remoto correspondente e deletar
+            if git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+                echo "  Deletando branch remoto: origin/$branch"
+                git push origin --delete "$branch"
+            else
+                echo "  Branch remoto origin/$branch não existe (ou já foi deletado)"
+            fi
+        else
+            echo "✗ $branch NÃO está mergeado em origin/main (não será removido)"
+        fi
+        echo ""
+    done
+fi
+
+echo "=== Fim da limpeza de branches ==="
+echo ""
+echo "Fazendo checkout no main e atualizando..."
+git checkout main
+git pull
+
+echo ""
+echo "=== Processo concluído ==="
+
